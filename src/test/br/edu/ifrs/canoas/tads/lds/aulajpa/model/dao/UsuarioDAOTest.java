@@ -5,7 +5,7 @@ import java.util.List;
 import org.fest.assertions.Assertions;
 import org.junit.Test;
 
-import br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.Usuario;
+//import br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.Usuario;
 
 public class UsuarioDAOTest {
 
