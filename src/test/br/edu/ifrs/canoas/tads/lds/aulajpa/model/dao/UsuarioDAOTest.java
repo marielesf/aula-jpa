@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class UsuarioDAOTest {
 
-	UsuarioDAO usuarioDAO = new UsuarioDAO();
+	//UsuarioDAO usuarioDAO = new UsuarioDAO();
 
 	@Test
 	public void testSalvaNovoUsuario() {
