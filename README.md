@@ -15,9 +15,12 @@ Visualize o arquivo **src/META-INF/persistence.xml**. Nele está configurado a *
 
 ##CRIANDO UMA ENTIDADE JPA
 1. Com o botão direito em cima do projeto, selecione **New > JPA Entity** e insira os valores:
- a. package: **br.edu.ifrs.canoas.tads.lds.pojo**
- b. classe: **Usuario**
- c. Clique em **Finish**
+ 
+a. package: **br.edu.ifrs.canoas.tads.lds.pojo**
+
+b. classe: **Usuario**
+
+c. Clique em **Finish**
  
 2. Adicione os atributos 
 * **Long id**
@@ -30,19 +33,28 @@ Visualize o arquivo **src/META-INF/persistence.xml**. Nele está configurado a *
 > Quanto a geração da chave primária, JPA permite que o programador escolha algumas estratégias, como:
 
 > * **GenerationType.AUTO**: será selecionada automaticamente uma estratégia para geração de chave primária.
+
 > * **GenerationType.IDENTITY**: indica que é necessário ler novamente a linha inserida no banco de dados para recuperar a chave gerada pelo próprio banco e atualizar o ID da entidade JPA 
+
 > * **GenerationType.SEQUENCE**: indica que deve ser usada uma sequence do banco de dados para a geração da chave primária da entidade.
+
 > * **GenerationType.TABLE**: indica que uma tabela do banco de dados deve ser usada para gerar a chave primária da entidade. 
 
 3. Use a estratégia AUTO para o atributo **id**:
+
 > ` @GeneratedValue(strategy = GenerationType.AUTO)
 
+
 ##ADICIONANDO A CLASSE AO CONTEXTO DE PERSISTÊNCIA
+
 Atualize o arquivo Persistence Unity adicionando a entidade criada entre </provider> e <properties> com:
+
 > `<class>br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.Usuario</class>
 
 ##EXERCÍCIO
+
 1. Descomente o método br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.UsuarioTest.test01() e o faça executar sem erro.
+
 2. Descomente o método br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.UsuarioTest.test02() e o faça executar sem erro.
 
 
@@ -61,11 +73,13 @@ Para se obter o **EntityManager**, primeiro é necessário criar uma fábrica **
 A persistência de uma entidade é uma operação que pega um objeto transiente (que ainda não foi salvo no banco de dados) e o armazena.
 
 ## Busca
+
 Uma forma de buscar um elemento do banco de dados é passar sua chave:
 
 >` Usuario usuario = em.find(Usuario.class, 1L);  //busca do banco (faz o SELECT)
 
 ## Exclusão
+
 Para excluir uma entidade, primeiro deve-se primeiro colocá-la no contexto de persistência (recém salvar a entidade ou recuperá-la do banco sem fechar o EM - cada vez que o EM é fechado, libera-se as entidades deste contexto de persistência) para depois excluí-la.
 
 >` Usuario usuario = em.find(Usuario.class, 1L); //busca do banco a entidade e a coloca no contexto de persistência 
@@ -76,6 +90,7 @@ Sempre depois de usar o **EntityManager**, deve-se fechá-lo usando o método **
 ## Atualização
 
 Tem duas principais formas de atualizar uma entidade: 
+
 1. Buscando a entidade do banco (pelo método **find()**), alterando sua situação de **detached** para **managed**, e depois a atualizando sem remover do contexto de persistência
 
 >` Usuario usuario = em.find(Usuario.class, 1L); //busca do banco a entidade e a coloca no contexto de persistência 
@@ -189,7 +204,9 @@ Para um relacionamento bidirecional (a partir de endereco, acessar também os us
      //...
  }
 ```
+
 ## One-to-Many
+
 É o relacionamento oposto ao **Many-to-One**, portanto é só fazer as devidas anotações nas classes. Neste caso, é possível recuperar todos os telefones de um usuário a partir dele próprio.
 
 ```java
@@ -203,6 +220,7 @@ Para um relacionamento bidirecional (a partir de endereco, acessar também os us
 
 
 ## Many-to-Many
+
 Considere o Modelo Relacional abaixo:
 
 > USUARIO (ID, EMAIL, SENHA)
