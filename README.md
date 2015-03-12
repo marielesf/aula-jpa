@@ -15,12 +15,9 @@ Visualize o arquivo **src/META-INF/persistence.xml**. Nele está configurado a *
 
 ##CRIANDO UMA ENTIDADE JPA
 1. Com o botão direito em cima do projeto, selecione **New > JPA Entity** e insira os valores:
- 
-a. package: **br.edu.ifrs.canoas.tads.lds.pojo**
-
-b. classe: **Usuario**
-
-c. Clique em **Finish**
+ a. package: **br.edu.ifrs.canoas.tads.lds.pojo**
+ b. classe: **Usuario**
+ c. Clique em **Finish**
  
 2. Adicione os atributos 
 * **Long id**
@@ -33,28 +30,19 @@ c. Clique em **Finish**
 > Quanto a geração da chave primária, JPA permite que o programador escolha algumas estratégias, como:
 
 > * **GenerationType.AUTO**: será selecionada automaticamente uma estratégia para geração de chave primária.
-
 > * **GenerationType.IDENTITY**: indica que é necessário ler novamente a linha inserida no banco de dados para recuperar a chave gerada pelo próprio banco e atualizar o ID da entidade JPA 
-
 > * **GenerationType.SEQUENCE**: indica que deve ser usada uma sequence do banco de dados para a geração da chave primária da entidade.
-
 > * **GenerationType.TABLE**: indica que uma tabela do banco de dados deve ser usada para gerar a chave primária da entidade. 
 
 3. Use a estratégia AUTO para o atributo **id**:
-
 > ` @GeneratedValue(strategy = GenerationType.AUTO)
 
-
 ##ADICIONANDO A CLASSE AO CONTEXTO DE PERSISTÊNCIA
-
 Atualize o arquivo Persistence Unity adicionando a entidade criada entre </provider> e <properties> com:
-
 > `<class>br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.Usuario</class>
 
 ##EXERCÍCIO
-
 1. Descomente o método br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.UsuarioTest.test01() e o faça executar sem erro.
-
 2. Descomente o método br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.UsuarioTest.test02() e o faça executar sem erro.
 
 
@@ -73,16 +61,15 @@ Para se obter o **EntityManager**, primeiro é necessário criar uma fábrica **
 A persistência de uma entidade é uma operação que pega um objeto transiente (que ainda não foi salvo no banco de dados) e o armazena.
 
 ## Busca
-
 Uma forma de buscar um elemento do banco de dados é passar sua chave:
 
 >` Usuario usuario = em.find(Usuario.class, 1L);  //busca do banco (faz o SELECT)
 
 ## Exclusão
-
 Para excluir uma entidade, primeiro deve-se primeiro colocá-la no contexto de persistência (recém salvar a entidade ou recuperá-la do banco sem fechar o EM - cada vez que o EM é fechado, libera-se as entidades deste contexto de persistência) para depois excluí-la.
 
 >` Usuario usuario = em.find(Usuario.class, 1L); //busca do banco a entidade e a coloca no contexto de persistência 
+
 >` em.remove(usuario); //uma vez no contexto de persistência, faz o DELETE no banco
 
 Sempre depois de usar o **EntityManager**, deve-se fechá-lo usando o método **close()**, encerrando o contexto de persistência e liberando todas as entidades (que mudam de **managed** para **detached**). Mudanças em entidades **detached** não são refletidas no BD.
@@ -90,16 +77,18 @@ Sempre depois de usar o **EntityManager**, deve-se fechá-lo usando o método **
 ## Atualização
 
 Tem duas principais formas de atualizar uma entidade: 
-
 1. Buscando a entidade do banco (pelo método **find()**), alterando sua situação de **detached** para **managed**, e depois a atualizando sem remover do contexto de persistência
 
 >` Usuario usuario = em.find(Usuario.class, 1L); //busca do banco a entidade e a coloca no contexto de persistência 
+
 >` usuario.setSenha("NovaSenha");//atualiza no banco; //faz o UPDATE no banco
 
 2. Atualizando normalmente uma entidade, depois criando um EM e executando a operação **merge()**.
 
 >` usuario.setSenha("NovaSenha");//Já existe um usuario e ele não está em nenhum contexto de persistência
+
 >` EntityManager em2 = emf.createEntityManager(); //Cria um novo contexto de persistência
+
 >` em2.merge(usuario); //vincula o objeto modificado ao novo contexto, fazendo com que seja atualizado no banco (executando o UPDATE)
 
 
@@ -149,14 +138,17 @@ A ideia do DAO é isolar as operações JDBC, como criação, recuperação, atu
 Em JPA, devemos trabalhar com o conceito de multiplicidade e navegabilidade utilizando os seguintes mapeamentos: **many-to-one** (muitos para um), **one-to-one** (um para um), **one-to-many** (um para muitos) e **many-to-many** (muitos para muitos).
 
 ## Many-to-One
+
 Considere o Modelo Relacional abaixo:
 
 > USUARIO (ID, EMAIL, SENHA)
+
 > TELEFONE(ID, ID_USUARIO, CODIGO, NUMERO)
 
 E a estrutura de classes:
 
 > Classe Usuario, com os atributos id (Long), email(String) e senha(String).
+
 > Classe Telefone, com os atributos id (Long) , usuario (Usuario), codigo (Integer) e numero (Integer).
 
 Esta estrutura pode gerar o seguinte mapeamento:
@@ -172,14 +164,17 @@ Esta estrutura pode gerar o seguinte mapeamento:
 ```
 
 ## One-to-One
+
 Considere o Modelo Relacional abaixo:
 
 > USUARIO (ID, EMAIL, SENHA, ID_ENDERECO)
+
 > ENDERECO (ID, LOGRADOURO, CIDADE, ESTADO)
 
 E a estrutura de classes:
 
 > Classe Usuario, com os atributos id (Long), email(String), senha(String), endereco (Endereco).
+
 > Classe Endereco, com os atributos id (Long), Logradouro (String), cidade (String), estado (String)
 
 Esta estrutura deve gerar o seguinte mapeamento:
@@ -224,12 +219,15 @@ Para um relacionamento bidirecional (a partir de endereco, acessar também os us
 Considere o Modelo Relacional abaixo:
 
 > USUARIO (ID, EMAIL, SENHA)
+
 > GRUPO (ID, DESCRICAO)
+
 > GRUPO_USUARIO (ID, USUARIO_ID, GRUPO_ID)
 
 E a estrutura de classes:
 
 > Classe Usuario, com os atributos id (Long), email(String), senha(String), grupos (Collection<Grupo>)
+
 > Classe Grupo, com os atributos id (Long), descricao (String)
 
 Esta estrutura deve gerar o seguinte mapeamento da tabela associativa:
