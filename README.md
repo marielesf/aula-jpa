@@ -90,34 +90,37 @@ Tem duas principais formas de atualizar uma entidade:
 
 **OBS IMPORTANTE** Rodando no Java SE, é necessário sempre gerenciar (iniciar e fechar) transações de manipulação (persist, remove e merge).
 
->` usuario.setSenha("NovaSenha");
->` EntityManager em2 = emf.createEntityManager(); 
->` em2.getTransaction().begin(); //Inicia transação
->` em2.merge(usuario);
->` em2.getTransaction().begin(); //Fecha transação
->` em2.close(); //fecha EM e libera as entidades (as torna **detached**)
-
+```java
+ usuario.setSenha("NovaSenha");
+ EntityManager em2 = emf.createEntityManager(); 
+ em2.getTransaction().begin(); //Inicia transação
+ em2.merge(usuario);
+ em2.getTransaction().begin(); //Fecha transação
+ em2.close(); //fecha EM e libera as entidades (as torna **detached**)
+```
 
 ## Java Persistence Query Language (JPQL)
 
 É possível fazer consulta com uma TypedQuery:
 
->` em = EntityManagerUtil.getEM();
->` TypedQuery<Usuario> query = em.createQuery(
->`         "SELECT usr FROM Usuario usr"
->`         + " where usr.nome = :nome"
->`         + " and usr.id = :id", Usuario.class);
->` 
->` if (usuario != null) {
->`     if (usuario.getNome() != null) {
->`       query.setParameter("nome", usuario.getNome());
->`     }
->`     if (usuario.getId() != null) {
->`       query.setParameter("id", usuario.getId());
->`     }
->` }
->` 
->` List<Usuario> usuarios = query.getResultList();
+```
+ em = EntityManagerUtil.getEM();
+ TypedQuery<Usuario> query = em.createQuery(
+         "SELECT usr FROM Usuario usr"
+         + " where usr.nome = :nome"
+         + " and usr.id = :id", Usuario.class);
+ 
+ if (usuario != null) {
+     if (usuario.getNome() != null) {
+       query.setParameter("nome", usuario.getNome());
+     }
+     if (usuario.getId() != null) {
+       query.setParameter("id", usuario.getId());
+     }
+ }
+ 
+ List<Usuario> usuarios = query.getResultList();
+```
 
 #PARTE 4 - PADRÃO DAO (Data Access Object)
 
@@ -143,14 +146,15 @@ E a estrutura de classes:
 
 Esta estrutura pode gerar o seguinte mapeamento:
 
->` public class Telefone{
->`     //...
->`     @ManyToOne
->`     @JoinColumn(name="ID_USUARIO") 
->`     private Usuario usuario; 
->`     //...
->` }
-
+```java
+ public class Telefone{
+     //...
+     @ManyToOne
+     @JoinColumn(name="ID_USUARIO") 
+     private Usuario usuario; 
+     //...
+ }
+```
 
 ## One-to-One
 Considere o Modelo Relacional abaixo:
@@ -165,33 +169,37 @@ E a estrutura de classes:
 
 Esta estrutura deve gerar o seguinte mapeamento:
 
->` public class Usuario{
->`     //...
->`     @OneToOne
->`     @JoinColumn(name="ID_ENDERECO") 
->`     private Endereco endereco; 
->`     //...
->` }
+```java
+ public class Usuario{
+     //...
+     @OneToOne
+     @JoinColumn(name="ID_ENDERECO") 
+     private Endereco endereco; 
+     //...
+ }
+```
 
 Para um relacionamento bidirecional (a partir de endereco, acessar também os usuários), basta utilizar este código:
 
->` public class Endereco{
->`     //...
->`     @OneToOne(mappedBy="endereco") 
->`     private Usuario usuario; 
->`     //...
->` }
-
+```java
+ public class Endereco{
+     //...
+     @OneToOne(mappedBy="endereco") 
+     private Usuario usuario; 
+     //...
+ }
+```
 ## One-to-Many
 É o relacionamento oposto ao **Many-to-One**, portanto é só fazer as devidas anotações nas classes. Neste caso, é possível recuperar todos os telefones de um usuário a partir dele próprio.
 
->` public class Usuario{
->`     //...
->`     @OneToMany (mappedBy="telefone")
->`    private Collection<Telefone> telefones; 
->`     //...
->` }
-
+```java
+ public class Usuario{
+     //...
+     @OneToMany (mappedBy="telefone")
+    private Collection<Telefone> telefones; 
+     //...
+ }
+```
 
 
 ## Many-to-Many
@@ -208,15 +216,16 @@ E a estrutura de classes:
 
 Esta estrutura deve gerar o seguinte mapeamento da tabela associativa:
 
->` public class Usuario{
->`     //...
->` 	   @ManyToMany
->`     @JoinTable(name="GRUPO_USUARIO", 
->`                joinColumns=@JoinColumn(name="USUARIO_ID"),
->`                inverseJoinColumns=
->`                          @JoinColumn(name="GRUPO_ID")
->`                )
->`     private Collection<Grupo> grupos;
->`     //...
->` }
->` 
+```java
+ public class Usuario{
+     //...
+ 	   @ManyToMany
+     @JoinTable(name="GRUPO_USUARIO", 
+                joinColumns=@JoinColumn(name="USUARIO_ID"),
+                inverseJoinColumns=
+                          @JoinColumn(name="GRUPO_ID")
+                )
+     private Collection<Grupo> grupos;
+     //...
+ }
+``` 
