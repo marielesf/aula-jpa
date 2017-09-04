@@ -1,52 +1,55 @@
-#PARTE 1 - ENTIDADE JPA
+# PARTE 1 - ENTIDADE JPA 
 
 Uma entidade JPA é uma classe Java simples que recebe algumas anotações e seus campos são persistidos em um BD. Qualquer classe com anotações **@Entity** e um atributo **@Id** e que possui um construtor sem argumentos pode ser uma entidade JPA.
 
-##LEVANTANDO A INSTÂNCIA DO BANCO DE DADOS
+## LEVANTANDO A INSTÂNCIA DO BANCO DE DADOS  
+
 Vá em Run > Run Configurations > Java Aplication (clique em cima com o Botão Direito) New >> e insira os valores:
- a. Name: **HSQLDB**
- b. Project: **Selecione aula-jpa**
- c. Main Class: **org.hsqldb.server.Server** 
- d. **Apply**
- e. **Run**
+ a. Name: **HSQLDB** 
+ b. Project: **Selecione aula-jpa** 
+ c. Main Class: **org.hsqldb.server.Server**  
+ d. **Apply** 
+ e. **Run** 
  
-##CONFIGURANDO A CONEXÃO COM O BANCO DE DADOS 
-Visualize o arquivo **src/META-INF/persistence.xml**. Nele está configurado a **Unidade de Persistência** (persistence-unity). No nosso exemplo, estamos realizando conexão com o banco HSQLDB.
+## CONFIGURANDO A CONEXÃO COM O BANCO DE DADOS   
 
-##CRIANDO UMA ENTIDADE JPA
-1. Com o botão direito em cima do projeto, selecione **New > JPA Entity** e insira os valores:
- a. package: **br.edu.ifrs.canoas.tads.lds.pojo**
- b. classe: **Usuario**
- c. Clique em **Finish**
+Visualize o arquivo **src/META-INF/persistence.xml**. Nele está configurado a **Unidade de Persistência** (persistence-unity). No nosso exemplo, estamos realizando conexão com o banco HSQLDB. 
+
+## CRIANDO UMA ENTIDADE JPA   
+
+1. Com o botão direito em cima do projeto, selecione **New > JPA Entity** e insira os valores: 
+ a. package: **br.edu.ifrs.canoas.tads.lds.pojo** 
+ b. classe: **Usuario** 
+ c. Clique em **Finish** 
  
-2. Adicione os atributos 
-* **Long id**
-* **String email**
-* **String senha**
-* ... e gere os getters e setters.
+2. Adicione os atributos  
+* **Long id** 
+* **String email** 
+* **String senha** 
+* ... e gere os getters e setters. 
 
-> As anotações mínimas de uma entidade JPA são: @Entity que é usada para definir a classe como uma entidade JPA e a anotação @Id que é usada para indicar que é uma PK da entidade.
+> As anotações mínimas de uma entidade JPA são: @Entity que é usada para definir a classe como uma entidade JPA e a anotação @Id que é usada para indicar que é uma PK da entidade. 
 
-> Quanto a geração da chave primária, JPA permite que o programador escolha algumas estratégias, como:
-
-> * **GenerationType.AUTO**: será selecionada automaticamente uma estratégia para geração de chave primária.
-> * **GenerationType.IDENTITY**: indica que é necessário ler novamente a linha inserida no banco de dados para recuperar a chave gerada pelo próprio banco e atualizar o ID da entidade JPA 
-> * **GenerationType.SEQUENCE**: indica que deve ser usada uma sequence do banco de dados para a geração da chave primária da entidade.
+> Quanto a geração da chave primária, JPA permite que o programador escolha algumas estratégias, como: 
+ 
+> * **GenerationType.AUTO**: será selecionada automaticamente uma estratégia para geração de chave primária. 
+> * **GenerationType.IDENTITY**: indica que é necessário ler novamente a linha inserida no banco de dados para recuperar a chave gerada pelo próprio banco e atualizar o ID da entidade JPA  
+> * **GenerationType.SEQUENCE**: indica que deve ser usada uma sequence do banco de dados para a geração da chave primária da entidade. 
 > * **GenerationType.TABLE**: indica que uma tabela do banco de dados deve ser usada para gerar a chave primária da entidade. 
-
-3. Use a estratégia AUTO para o atributo **id**:
+ 
+3. Use a estratégia AUTO para o atributo **id**: 
 > ` @GeneratedValue(strategy = GenerationType.AUTO)
 
-##ADICIONANDO A CLASSE AO CONTEXTO DE PERSISTÊNCIA
+## ADICIONANDO A CLASSE AO CONTEXTO DE PERSISTÊNCIA
 Atualize o arquivo Persistence Unity adicionando a entidade criada entre </provider> e <properties> com:
 > `<class>br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.Usuario</class>
 
-##EXERCÍCIO
+## EXERCÍCIO
 1. Descomente o método br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.UsuarioTest.test01() e o faça executar sem erro.
 2. Descomente o método br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.UsuarioTest.test02() e o faça executar sem erro.
 
 
-#PARTE 2 - GERENCIANDO ENTIDADES
+# PARTE 2 - GERENCIANDO ENTIDADES
 
 A interface **EntityManager** é quem faz a persistência dos objetos Java em tabelas do BD, adicionando-os ao contexto de persistência. Note que não se pode ter duas entidades com mesmo nome dentro de um contexto (por exemplo, não se pode ter duas classes com nome Usuario). 
 
@@ -56,7 +59,7 @@ Para se obter o **EntityManager**, primeiro é necessário criar uma fábrica **
 
 
 
-#PARTE 3 - TRABALHANDO COM DQL E DML
+# PARTE 3 - TRABALHANDO COM DQL E DML
 
 A persistência de uma entidade é uma operação que pega um objeto transiente (que ainda não foi salvo no banco de dados) e o armazena.
 
@@ -92,7 +95,7 @@ Tem duas principais formas de atualizar uma entidade:
 >` em2.merge(usuario); //vincula o objeto modificado ao novo contexto, fazendo com que seja atualizado no banco (executando o UPDATE)
 
 
-**OBS IMPORTANTE** Rodando no Java SE, é necessário sempre gerenciar (iniciar e fechar) transações de manipulação (persist, remove e merge).
+** OBS IMPORTANTE** Rodando no Java SE, é necessário sempre gerenciar (iniciar e fechar) transações de manipulação (persist, remove e merge).
 
 ```java
  usuario.setSenha("NovaSenha");
@@ -126,14 +129,14 @@ Tem duas principais formas de atualizar uma entidade:
  List<Usuario> usuarios = query.getResultList();
 ```
 
-#PARTE 4 - PADRÃO DAO (Data Access Object)
+# PARTE 4 - PADRÃO DAO (Data Access Object)
 
 A ideia do DAO é isolar as operações JDBC, como criação, recuperação, atualização e exclusão, isolando-as das demais camadas da aplicação. Basicamente é trabalhar o que vimos até agora para cada entidade.
 
 1. Descomente todos os métodos da classe br.edu.ifrs.canoas.tads.lds.aulajpa.pojo.model.dao.UsuarioDAOTest e os façam executar sem erro.
 
 
-#PARTE 5 - RELACIONANDO ENTIDADES
+# PARTE 5 - RELACIONANDO ENTIDADES
 
 Em JPA, devemos trabalhar com o conceito de multiplicidade e navegabilidade utilizando os seguintes mapeamentos: **many-to-one** (muitos para um), **one-to-one** (um para um), **one-to-many** (um para muitos) e **many-to-many** (muitos para muitos).
 
